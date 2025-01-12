@@ -7,14 +7,17 @@ import {NftGame} from "src/NftGame.sol";
 import {DeployNftGame} from "script/DeployNftGame.s.sol";
 import {console2, Script} from "forge-std/Script.sol";
 
-
 contract NftGameTest is Test {
     DeployNftGame public deployer;
     NftGame nftGame;
-    address USER  = makeAddr("USER");
+    address USER = makeAddr("USER");
     uint256 STARTING_BALANCE = 10 ether;
-    string constant CHARACTER_1_TOKEN_URI = "data:application/json;base64,eyJuYW1lIjogIkRhcmsgV2l6YXJkIiwgImRlc2NyaXB0aW9uIjogIkEgZGFyayB3aXphcmQgd2l0aCBhIG15c3RlcmlvdXMgcGFzdCIsICJpbWFnZSI6ICJpcGZzOi8vUW1ReDFjVHRSV3VQV0dkZ2NON2k2bm1WaHVTcHp2d1lDMnRadG84b2poclNndSIsICJhdHRyaWJ1dGVzIjogWyB7ICJ0cmFpdF90eXBlIjogIkhlYWx0aCBQb2ludHMiLCAidmFsdWUiOiAyMDB9LCB7ICJ0cmFpdF90eXBlIjogIkF0dGFjayBEYW1hZ2UiLCAidmFsdWUiOiAxNTB9IF19";
+    string constant CHARACTER_1_TOKEN_URI =
+        "data:application/json;base64,eyJuYW1lIjogIkRhcmsgV2l6YXJkIiwgImRlc2NyaXB0aW9uIjogIkEgZGFyayB3aXphcmQgd2l0aCBhIG15c3RlcmlvdXMgcGFzdCIsICJpbWFnZSI6ICJpcGZzOi8vUW1ReDFjVHRSV3VQV0dkZ2NON2k2bm1WaHVTcHp2d1lDMnRadG84b2poclNndSIsICJhdHRyaWJ1dGVzIjogWyB7ICJ0cmFpdF90eXBlIjogIkhlYWx0aCBQb2ludHMiLCAidmFsdWUiOiAyMDB9LCB7ICJ0cmFpdF90eXBlIjogIkF0dGFjayBEYW1hZ2UiLCAidmFsdWUiOiAxNTB9IF19";
     uint256 constant CHARACTER_1_INDEX = 1;
+
+    event CharacterNftMinted(address indexed owner, uint256 indexed tokenId, uint256 indexed characterIndex);
+
 
     function setUp() public {
         deployer = new DeployNftGame();
@@ -22,13 +25,14 @@ contract NftGameTest is Test {
         vm.deal(USER, STARTING_BALANCE);
     }
 
+    // constructor
     function testConstructorInitializersCharacters() public view {
         NftGame.CharacterAttributes[] memory characters = nftGame.getCharacters();
         NftGame.CharacterAttributes[] memory deployerCharacters = deployer.getCharacters();
         NftGame.BossAttributes memory boss = nftGame.getBoss();
         NftGame.BossAttributes memory deployerBoss = deployer.getBoss();
         assertEq(characters.length, 2);
-        for(uint256 i = 0; i < characters.length; i++) {
+        for (uint256 i = 0; i < characters.length; i++) {
             assertEq(characters[i].characterIndex, deployerCharacters[i].characterIndex);
             assertEq(characters[i].description, deployerCharacters[i].description);
             assertEq(characters[i].name, deployerCharacters[i].name);
@@ -43,18 +47,27 @@ contract NftGameTest is Test {
         assertEq(boss.attackDamage, deployerBoss.attackDamage);
     }
 
-    function testMintsNftToUser() public {
+    // mintNft
+    function testMintNftMintsNftToUser() public {
         vm.prank(USER);
         nftGame.mintNft(CHARACTER_1_INDEX);
         assertEq(nftGame.balanceOf(USER), 1);
     }
 
-    function testMintsCharacterAttributes() public {
+    function testMintNftAssignsCharacterAttributes() public {
         vm.prank(USER);
         nftGame.mintNft(CHARACTER_1_INDEX);
         assertEq(nftGame.getMintedCharacterAttributes(0).characterIndex, CHARACTER_1_INDEX);
     }
 
+    function testMintNftEmitsEvent() public {
+        vm.prank(USER);
+        vm.expectEmit(true, true, true, false, address(nftGame));
+        emit CharacterNftMinted(USER, 0, CHARACTER_1_INDEX);
+        nftGame.mintNft(CHARACTER_1_INDEX);
+    }
+
+    // tokenURI
     function testTokenURIReturnsTheCharacterAttributes() public {
         vm.prank(USER);
         nftGame.mintNft(CHARACTER_1_INDEX);

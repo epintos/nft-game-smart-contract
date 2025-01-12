@@ -6,15 +6,15 @@ import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {Base64} from "@openzeppelin/contracts/utils/Base64.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
-
 contract NftGame is ERC721 {
-        using Strings for uint256;
-
+    using Strings for uint256;
 
     uint256 private s_tokenCounter;
     mapping(uint256 => CharacterAttributes) private s_tokenIdCharacterAttributes;
     CharacterAttributes[] private s_characters;
     BossAttributes private s_boss;
+
+    event CharacterNftMinted(address indexed owner, uint256 indexed tokenId, uint256 indexed characterIndex);
 
     struct CharacterAttributes {
         uint256 characterIndex;
@@ -48,9 +48,11 @@ contract NftGame is ERC721 {
         }
     }
 
-    function mintNft(uint256 _characterIndex) external {
+    function mintNft(uint256 characterIndex) external {
         _safeMint(msg.sender, s_tokenCounter);
-        s_tokenIdCharacterAttributes[s_tokenCounter] = s_characters[_characterIndex];
+        s_tokenIdCharacterAttributes[s_tokenCounter] = s_characters[characterIndex];
+        emit CharacterNftMinted(msg.sender, s_tokenCounter, characterIndex);
+
         s_tokenCounter++;
     }
 
