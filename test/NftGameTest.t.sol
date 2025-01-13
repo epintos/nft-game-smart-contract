@@ -61,7 +61,7 @@ contract NftGameTest is Test {
     }
 
     // mintNft
-    function testMintNftMintsNftToUser() public characterNftMinted{
+    function testMintNftMintsNftToUser() public characterNftMinted {
         assertEq(nftGame.balanceOf(USER), 1);
     }
 
@@ -103,7 +103,9 @@ contract NftGameTest is Test {
         NftGame.CharacterAttributes memory character = nftGame.getMintedCharacterAttributes(TOKEN_ID_0);
         NftGame.BossAttributes memory boss = nftGame.getBoss();
         vm.expectEmit(true, true, true, false, address(nftGame));
-        emit AttackRoundComplete(TOKEN_ID_0, boss.currentHp - character.attackDamage, character.currentHp - boss.attackDamage);
+        emit AttackRoundComplete(
+            TOKEN_ID_0, boss.currentHp - character.attackDamage, character.currentHp - boss.attackDamage
+        );
         nftGame.attack(TOKEN_ID_0);
         vm.stopPrank();
     }
@@ -115,7 +117,7 @@ contract NftGameTest is Test {
         nftGame.attack(TOKEN_ID_0);
     }
 
-    function testAttackFailsIfBossHasNoHpLeft() public{
+    function testAttackFailsIfBossHasNoHpLeft() public {
         vm.startPrank(USER);
         nftGame.mintNft(CHARACTER_0_INDEX);
         nftGame.attack(TOKEN_ID_0);
@@ -139,7 +141,9 @@ contract NftGameTest is Test {
         NftGame.CharacterAttributes memory character = nftGame.getMintedCharacterAttributes(TOKEN_ID_0);
         NftGame.BossAttributes memory boss = nftGame.getBoss();
         vm.expectEmit(true, true, true, false, address(nftGame));
-        emit AttackRoundComplete(TOKEN_ID_0, boss.currentHp - character.attackDamage, character.currentHp - boss.attackDamage);
+        emit AttackRoundComplete(
+            TOKEN_ID_0, boss.currentHp - character.attackDamage, character.currentHp - boss.attackDamage
+        );
         nftGame.attack(TOKEN_ID_0);
     }
 }
