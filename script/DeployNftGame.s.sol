@@ -13,8 +13,9 @@ contract DeployNftGame is Script {
         description: "An undead king with a cursed sword",
         name: "Undead King",
         imageURI: "ipfs://QmdHgPwBnmwnCF3uF5Xh99BGg1HaL9ULme3EmP6VYc2KYK",
-        hp: 1000,
-        attackDamage: 50
+        currentHp: 400,
+        maxHp: 400,
+        attackDamage: 150
     });
 
     function run() external returns (NftGame) {
@@ -24,8 +25,9 @@ contract DeployNftGame is Script {
                 description: "A warrior with a heart of gold",
                 name: "Hero",
                 imageURI: "ipfs://QmSfiFakNiceAjUyE3X2ijKrXcQ6YNG9aFkiUVh9jRYUBY",
-                hp: 100,
-                attackDamage: 150
+                currentHp: 500,
+                maxHp: 500,
+                attackDamage: 300
             })
         );
         CHARACTERS.push(
@@ -34,7 +36,8 @@ contract DeployNftGame is Script {
                 description: "A dark wizard with a mysterious past",
                 name: "Dark Wizard",
                 imageURI: "ipfs://QmQx1cTtRWuPWGdgcN7i6nmVhuSpzvwYC2tZto8ojhrSgu",
-                hp: 200,
+                currentHp: 200,
+                maxHp: 200,
                 attackDamage: 150
             })
         );

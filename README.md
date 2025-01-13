@@ -2,7 +2,7 @@
 
 Developed a smart contract to simulate a basic game using NFTs
 
-This is a practice project where I explore and experiment with various Solidity concepts.
+This is a practice project where I explore and experiment with various Solidity concepts. The idea is inspired by an older project on [buildspace](https://buildspace.so/).
 
 ## Usage
 
