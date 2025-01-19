@@ -1,4 +1,4 @@
-## NftGame Solidity Smart Contract
+## NFT Game Solidity Smart Contract
 
 Developed a smart contract to simulate a basic game using NFTs
 

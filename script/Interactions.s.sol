@@ -2,15 +2,14 @@
 
 pragma solidity ^0.8.28;
 
-import {console2, Script} from "forge-std/Script.sol";
-import {NftGame} from "src/NftGame.sol";
-import {DevOpsTools} from "lib/foundry-devops/src/DevOpsTools.sol";
+import { console2, Script } from "forge-std/Script.sol";
+import { NftGame } from "src/NftGame.sol";
+import { DevOpsTools } from "lib/foundry-devops/src/DevOpsTools.sol";
 
 contract MintNft is Script {
     NftGame public nftGame;
 
     function run() external {
-        console2.log(block.chainid);
         address mostRecentlyDeployed = DevOpsTools.get_most_recent_deployment("NftGame", block.chainid);
         uint256 characterIndex = vm.envUint("CHARACTER_INDEX");
         mint(mostRecentlyDeployed, characterIndex);

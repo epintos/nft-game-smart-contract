@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.28;
 
-import {Test} from "forge-std/Test.sol";
-import {NftGame} from "src/NftGame.sol";
-import {DeployNftGame} from "script/DeployNftGame.s.sol";
+import { Test } from "forge-std/Test.sol";
+import { NftGame } from "src/NftGame.sol";
+import { DeployNftGame } from "script/DeployNftGame.s.sol";
 
 contract NftGameTest is Test {
     DeployNftGame public deployer;
