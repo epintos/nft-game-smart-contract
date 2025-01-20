@@ -1,6 +1,6 @@
 ## NFT Game Solidity Smart Contract
 
-This is a practice project where I explore and experiment with various Solidity concepts. The idea is inspired by an older project on [buildspace](https://buildspace.so/).
+This is a practice project where I explore and experiment with various Solidity concepts.
 
 Developed a smart contract to simulate a basic game using NFTs.
 - User can mint certain characters with abilities.
@@ -8,7 +8,7 @@ Developed a smart contract to simulate a basic game using NFTs.
 - The attack damage is calculated randomly using Chainlink VRF.
 
 Known issues:
-- Chainlink subscription creation in Anvil fails unless `blockhash(block.number + 1)` is updated in the `createSubscription` method in `SubscriptionAPI` mock contract.
+- Chainlink subscription creation in Anvil fails unless `blockhash(block.number + 1)` is updated in the `createSubscription` function in `SubscriptionAPI` mock contract.
 
 ## Usage
 
