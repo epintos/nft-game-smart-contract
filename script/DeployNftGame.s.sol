@@ -3,13 +3,13 @@
 pragma solidity ^0.8.28;
 
 import { Script } from "forge-std/Script.sol";
-import { NftGame } from "src/NftGame.sol";
+import { NFTGame } from "src/NFTGame.sol";
 
-contract DeployNftGame is Script {
-    NftGame public nftGame;
+contract DeployNFTGame is Script {
+    NFTGame public NFTGame;
 
-    NftGame.CharacterAttributes[] public CHARACTERS;
-    NftGame.BossAttributes public BOSS = NftGame.BossAttributes({
+    NFTGame.CharacterAttributes[] public CHARACTERS;
+    NFTGame.BossAttributes public BOSS = NFTGame.BossAttributes({
         description: "An undead king with a cursed sword",
         name: "Undead King",
         imageURI: "ipfs://QmdHgPwBnmwnCF3uF5Xh99BGg1HaL9ULme3EmP6VYc2KYK",
@@ -18,9 +18,9 @@ contract DeployNftGame is Script {
         attackDamage: 150
     });
 
-    function run() external returns (NftGame) {
+    function run() external returns (NFTGame) {
         CHARACTERS.push(
-            NftGame.CharacterAttributes({
+            NFTGame.CharacterAttributes({
                 characterIndex: 0,
                 description: "A warrior with a heart of gold",
                 name: "Hero",
@@ -31,7 +31,7 @@ contract DeployNftGame is Script {
             })
         );
         CHARACTERS.push(
-            NftGame.CharacterAttributes({
+            NFTGame.CharacterAttributes({
                 characterIndex: 1,
                 description: "A dark wizard with a mysterious past",
                 name: "Dark Wizard",
@@ -42,16 +42,16 @@ contract DeployNftGame is Script {
             })
         );
         vm.startBroadcast();
-        nftGame = new NftGame(CHARACTERS, BOSS);
+        NFTGame = new NFTGame(CHARACTERS, BOSS);
         vm.stopBroadcast();
-        return nftGame;
+        return NFTGame;
     }
 
-    function getCharacters() external view returns (NftGame.CharacterAttributes[] memory) {
+    function getCharacters() external view returns (NFTGame.CharacterAttributes[] memory) {
         return CHARACTERS;
     }
 
-    function getBoss() external view returns (NftGame.BossAttributes memory) {
+    function getBoss() external view returns (NFTGame.BossAttributes memory) {
         return BOSS;
     }
 }

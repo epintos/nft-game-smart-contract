@@ -1,8 +1,12 @@
 ## NFT Game Solidity Smart Contract
 
-Developed a smart contract to simulate a basic game using NFTs
-
 This is a practice project where I explore and experiment with various Solidity concepts. The idea is inspired by an older project on [buildspace](https://buildspace.so/).
+
+Developed a smart contract to simulate a basic game using NFTs.
+- User can mint certain characters with abilities.
+- User can attack a boss. The boss is unique and doesn't revive (for now).
+- The attack damage is calculated randomly using Chainlink VRF.
+
 
 ## Usage
 
