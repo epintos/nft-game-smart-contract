@@ -7,7 +7,6 @@ Developed a smart contract to simulate a basic game using NFTs.
 - User can attack a boss. The boss is unique and doesn't revive (for now).
 - The attack damage is calculated randomly using Chainlink VRF.
 
-
 ## Usage
 
 ### Install
