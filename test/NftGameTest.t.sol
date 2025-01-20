@@ -59,18 +59,17 @@ contract NFTGameTest is Test {
     // constructor
     function testConstructorInitializersCharacters() public view {
         NFTGame.CharacterAttributes[] memory characters = nftGame.getCharacters();
-        NFTGame.CharacterAttributes[] memory deployerCharacters = deployer.getCharacters();
         NFTGame.BossAttributes memory boss = nftGame.getBoss();
         NFTGame.BossAttributes memory deployerBoss = deployer.getBoss();
         assertEq(characters.length, 3);
         for (uint256 i = 0; i < characters.length; i++) {
-            assertEq(characters[i].characterIndex, deployerCharacters[i].characterIndex);
-            assertEq(characters[i].description, deployerCharacters[i].description);
-            assertEq(characters[i].name, deployerCharacters[i].name);
-            assertEq(characters[i].imageURI, deployerCharacters[i].imageURI);
-            assertEq(characters[i].currentHp, deployerCharacters[i].currentHp);
-            assertEq(characters[i].maxHp, deployerCharacters[i].maxHp);
-            assertEq(characters[i].attackDamage, deployerCharacters[i].attackDamage);
+            assertEq(characters[i].characterIndex, i);
+            assertEq(characters[i].description, deployer.CHARACTER_DESCRIPTIONS(i));
+            assertEq(characters[i].name, deployer.CHARACTER_NAMES(i));
+            assertEq(characters[i].imageURI, deployer.CHARACTERS_IMAGES_URIS(i));
+            assertEq(characters[i].currentHp, deployer.CHARACTER_CURRENT_HP(i));
+            assertEq(characters[i].maxHp, deployer.CHARACTER_MAX_HP(i));
+            assertEq(characters[i].attackDamage, deployer.CHARACTER_ATTACK_DAMAGE(i));
         }
         assertEq(boss.description, deployerBoss.description);
         assertEq(boss.name, deployerBoss.name);

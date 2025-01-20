@@ -66,7 +66,12 @@ contract NFTGame is ERC721, VRFConsumerBaseV2Plus {
 
     // CONSTRUCTOR
     constructor(
-        CharacterAttributes[] memory characters,
+        string[] memory charactersDescriptions,
+        string[] memory charactersNames,
+        string[] memory charactersImageURIs,
+        uint256[] memory charactersCurrentHp,
+        uint256[] memory charactersMaxHp,
+        uint256[] memory charactersAttackDamage,
         BossAttributes memory boss,
         address vrfCoordinator,
         bytes32 gasLane,
@@ -77,15 +82,15 @@ contract NFTGame is ERC721, VRFConsumerBaseV2Plus {
         VRFConsumerBaseV2Plus(vrfCoordinator)
     {
         s_boss = boss;
-        for (uint256 i = 0; i < characters.length; i++) {
+        for (uint256 i = 0; i < charactersDescriptions.length; i++) {
             CharacterAttributes memory character = CharacterAttributes({
                 characterIndex: i,
-                description: characters[i].description,
-                name: characters[i].name,
-                imageURI: characters[i].imageURI,
-                currentHp: characters[i].currentHp,
-                maxHp: characters[i].maxHp,
-                attackDamage: characters[i].attackDamage
+                description: charactersDescriptions[i],
+                name: charactersNames[i],
+                imageURI: charactersImageURIs[i],
+                currentHp: charactersCurrentHp[i],
+                maxHp: charactersMaxHp[i],
+                attackDamage: charactersAttackDamage[i]
             });
             s_characters.push(character);
         }

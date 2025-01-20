@@ -11,6 +11,21 @@ contract DeployNFTGame is Script {
     NFTGame public nftGame;
 
     NFTGame.CharacterAttributes[] public CHARACTERS;
+    string[] public CHARACTER_NAMES = ["Hero", "Dark Wizard", "Fallen Hero"];
+    string[] public CHARACTER_DESCRIPTIONS = [
+        "A warrior with a heart of gold",
+        "A dark wizard with a mysterious past",
+        "A fallen hero with no remaining strength"
+    ];
+    string[] public CHARACTERS_IMAGES_URIS = [
+        "ipfs://QmSfiFakNiceAjUyE3X2ijKrXcQ6YNG9aFkiUVh9jRYUBY",
+        "ipfs://QmQx1cTtRWuPWGdgcN7i6nmVhuSpzvwYC2tZto8ojhrSgu",
+        "ipfs://QmdHgPwBnmwnCF3uF5Xh99BGg1HaL9ULme3EmP6VYc2KYK"
+    ];
+    uint256[] public CHARACTER_CURRENT_HP = [500, 200, 0];
+    uint256[] public CHARACTER_MAX_HP = [500, 200, 300];
+    uint256[] public CHARACTER_ATTACK_DAMAGE = [300, 150, 100];
+
     NFTGame.BossAttributes public BOSS = NFTGame.BossAttributes({
         description: "An undead king with a cursed sword",
         name: "Undead King",
@@ -23,8 +38,6 @@ contract DeployNFTGame is Script {
     function run() external returns (NFTGame, HelperConfig) {
         HelperConfig helperConfig = new HelperConfig();
         HelperConfig.NetworkConfig memory config = helperConfig.getConfig();
-
-        buildCharacters();
 
         if (config.subscriptionId == 0) {
             // Create subscription
@@ -39,7 +52,17 @@ contract DeployNFTGame is Script {
 
         vm.startBroadcast();
         nftGame = new NFTGame(
-            CHARACTERS, BOSS, config.vrfCoordinator, config.gasLane, config.subscriptionId, config.callbackGasLimit
+            CHARACTER_DESCRIPTIONS,
+            CHARACTER_NAMES,
+            CHARACTERS_IMAGES_URIS,
+            CHARACTER_CURRENT_HP,
+            CHARACTER_MAX_HP,
+            CHARACTER_ATTACK_DAMAGE,
+            BOSS,
+            config.vrfCoordinator,
+            config.gasLane,
+            config.subscriptionId,
+            config.callbackGasLimit
         );
         vm.stopBroadcast();
 
@@ -50,47 +73,7 @@ contract DeployNFTGame is Script {
         return (nftGame, helperConfig);
     }
 
-    function getCharacters() external view returns (NFTGame.CharacterAttributes[] memory) {
-        return CHARACTERS;
-    }
-
     function getBoss() external view returns (NFTGame.BossAttributes memory) {
         return BOSS;
-    }
-
-    function buildCharacters() internal {
-        CHARACTERS.push(
-            NFTGame.CharacterAttributes({
-                characterIndex: 0,
-                description: "A warrior with a heart of gold",
-                name: "Hero",
-                imageURI: "ipfs://QmSfiFakNiceAjUyE3X2ijKrXcQ6YNG9aFkiUVh9jRYUBY",
-                currentHp: 500,
-                maxHp: 500,
-                attackDamage: 300
-            })
-        );
-        CHARACTERS.push(
-            NFTGame.CharacterAttributes({
-                characterIndex: 1,
-                description: "A dark wizard with a mysterious past",
-                name: "Dark Wizard",
-                imageURI: "ipfs://QmQx1cTtRWuPWGdgcN7i6nmVhuSpzvwYC2tZto8ojhrSgu",
-                currentHp: 200,
-                maxHp: 200,
-                attackDamage: 150
-            })
-        );
-        CHARACTERS.push(
-            NFTGame.CharacterAttributes({
-                characterIndex: 2,
-                description: "A fallen hero with no remaining strength",
-                name: "Fallen Hero",
-                imageURI: "ipfs://QmdHgPwBnmwnCF3uF5Xh99BGg1HaL9ULme3EmP6VYc2KYK",
-                currentHp: 0,
-                maxHp: 300,
-                attackDamage: 100
-            })
-        );
     }
 }

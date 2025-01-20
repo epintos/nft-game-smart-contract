@@ -9,7 +9,6 @@ Developed a smart contract to simulate a basic game using NFTs.
 
 Known issues:
 - Chainlink subscription creation in Anvil fails unless `blockhash(block.number + 1)` is updated in the `createSubscription` method in `SubscriptionAPI` mock contract.
-- Build fails with `Stack too deep.` Adding `via_ir = true` to Foundry fixes the issue for now.
 
 ## Usage
 
