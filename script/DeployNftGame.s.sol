@@ -4,9 +4,11 @@ pragma solidity ^0.8.28;
 
 import { Script } from "forge-std/Script.sol";
 import { NFTGame } from "src/NFTGame.sol";
+import { HelperConfig } from "script/HelperConfig.s.sol";
+import { CreateSubscription, FundSubscription, AddConsumer } from "script/Interactions.s.sol";
 
 contract DeployNFTGame is Script {
-    NFTGame public NFTGame;
+    NFTGame public nftGame;
 
     NFTGame.CharacterAttributes[] public CHARACTERS;
     NFTGame.BossAttributes public BOSS = NFTGame.BossAttributes({
@@ -18,7 +20,45 @@ contract DeployNFTGame is Script {
         attackDamage: 150
     });
 
-    function run() external returns (NFTGame) {
+    function run() external returns (NFTGame, HelperConfig) {
+        HelperConfig helperConfig = new HelperConfig();
+        HelperConfig.NetworkConfig memory config = helperConfig.getConfig();
+
+        buildCharacters();
+
+        if (config.subscriptionId == 0) {
+            // Create subscription
+            CreateSubscription createSubscription = new CreateSubscription();
+            (config.subscriptionId, config.vrfCoordinator) =
+                createSubscription.createSubscription(config.vrfCoordinator, config.account);
+
+            // Fund it
+            FundSubscription fundSubscription = new FundSubscription();
+            fundSubscription.fundSubscription(config.vrfCoordinator, config.subscriptionId, config.link, config.account);
+        }
+
+        vm.startBroadcast();
+        nftGame = new NFTGame(
+            CHARACTERS, BOSS, config.vrfCoordinator, config.gasLane, config.subscriptionId, config.callbackGasLimit
+        );
+        vm.stopBroadcast();
+
+        // Add consumer
+        AddConsumer addConsumer = new AddConsumer();
+        addConsumer.addConsumer(address(nftGame), config.vrfCoordinator, config.subscriptionId, config.account);
+
+        return (nftGame, helperConfig);
+    }
+
+    function getCharacters() external view returns (NFTGame.CharacterAttributes[] memory) {
+        return CHARACTERS;
+    }
+
+    function getBoss() external view returns (NFTGame.BossAttributes memory) {
+        return BOSS;
+    }
+
+    function buildCharacters() internal {
         CHARACTERS.push(
             NFTGame.CharacterAttributes({
                 characterIndex: 0,
@@ -41,17 +81,16 @@ contract DeployNFTGame is Script {
                 attackDamage: 150
             })
         );
-        vm.startBroadcast();
-        NFTGame = new NFTGame(CHARACTERS, BOSS);
-        vm.stopBroadcast();
-        return NFTGame;
-    }
-
-    function getCharacters() external view returns (NFTGame.CharacterAttributes[] memory) {
-        return CHARACTERS;
-    }
-
-    function getBoss() external view returns (NFTGame.BossAttributes memory) {
-        return BOSS;
+        CHARACTERS.push(
+            NFTGame.CharacterAttributes({
+                characterIndex: 2,
+                description: "A fallen hero with no remaining strength",
+                name: "Fallen Hero",
+                imageURI: "ipfs://QmdHgPwBnmwnCF3uF5Xh99BGg1HaL9ULme3EmP6VYc2KYK",
+                currentHp: 0,
+                maxHp: 300,
+                attackDamage: 100
+            })
+        );
     }
 }

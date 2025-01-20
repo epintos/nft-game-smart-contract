@@ -7,6 +7,9 @@ Developed a smart contract to simulate a basic game using NFTs.
 - User can attack a boss. The boss is unique and doesn't revive (for now).
 - The attack damage is calculated randomly using Chainlink VRF.
 
+Known issues:
+- Chainlink subscription creation in Anvil fails unless `blockhash(block.number + 1)` is updated in the `createSubscription` method in `SubscriptionAPI` mock contract.
+- Build fails with `Stack too deep.` Adding `via_ir = true` to Foundry fixes the issue for now.
 
 ## Usage
 

@@ -7,6 +7,7 @@ import { Base64 } from "@openzeppelin/contracts/utils/Base64.sol";
 import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
 import { VRFConsumerBaseV2Plus } from "@chainlink/contracts/src/v0.8/vrf/dev/VRFConsumerBaseV2Plus.sol";
 import { VRFV2PlusClient } from "@chainlink/contracts/src/v0.8/vrf/dev/libraries/VRFV2PlusClient.sol";
+import { Test, console2 } from "forge-std/Test.sol";
 
 /**
  * @title NFTGame
@@ -49,7 +50,6 @@ contract NFTGame is ERC721, VRFConsumerBaseV2Plus {
     mapping(uint256 => CharacterAttributes) private s_tokenIdCharacterAttributes;
     CharacterAttributes[] private s_characters;
     BossAttributes private s_boss;
-    uint256 private immutable i_interval;
     bytes32 private immutable i_keyHash;
     uint256 private immutable i_subscriptionId;
     uint32 private immutable i_callbackGasLimit;
@@ -95,7 +95,7 @@ contract NFTGame is ERC721, VRFConsumerBaseV2Plus {
     }
 
     // EXTERNAL FUNCTIONS
-    function mintNft(uint256 characterIndex) external {
+    function mintNFT(uint256 characterIndex) external {
         _safeMint(msg.sender, s_tokenCounter);
         s_tokenIdCharacterAttributes[s_tokenCounter] = s_characters[characterIndex];
         emit CharacterNftMinted(msg.sender, s_tokenCounter, characterIndex);
@@ -113,6 +113,7 @@ contract NFTGame is ERC721, VRFConsumerBaseV2Plus {
         }
 
         CharacterAttributes memory ownedCharacter = s_tokenIdCharacterAttributes[tokenId];
+        console2.log("ownedCharacter.currentHp", ownedCharacter.currentHp);
         if (ownedCharacter.currentHp == 0) {
             revert NFTGame__CharacterHasNoHpLeft();
         }
@@ -147,8 +148,9 @@ contract NFTGame is ERC721, VRFConsumerBaseV2Plus {
     function fulfillRandomWords(uint256 requestId, uint256[] calldata randomWords) internal override {
         uint256 tokenId = s_requestIdToTokenId[requestId];
         CharacterAttributes memory character = s_tokenIdCharacterAttributes[tokenId];
-        uint256 characterAttackDamage = randomWords[0] % character.attackDamage;
-        uint256 bossAttackDamage = randomWords[1] % s_boss.attackDamage;
+        uint256 characterAttackDamage = randomWords[0] % character.attackDamage + 1; // We add 1 to make sure there is
+            // always damage
+        uint256 bossAttackDamage = randomWords[1] % s_boss.attackDamage + 1;
 
         if (character.currentHp < bossAttackDamage) {
             character.currentHp = 0;
