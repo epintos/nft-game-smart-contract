@@ -101,11 +101,11 @@ contract NFTGame is ERC721, VRFConsumerBaseV2Plus {
 
     // EXTERNAL FUNCTIONS
     function mintNFT(uint256 characterIndex) external {
-        _safeMint(msg.sender, s_tokenCounter);
-        s_tokenIdCharacterAttributes[s_tokenCounter] = s_characters[characterIndex];
-        emit CharacterNftMinted(msg.sender, s_tokenCounter, characterIndex);
-
+        uint256 currentTokenId = s_tokenCounter;
+        s_tokenIdCharacterAttributes[currentTokenId] = s_characters[characterIndex];
         s_tokenCounter++;
+        emit CharacterNftMinted(msg.sender, currentTokenId, characterIndex);
+        _safeMint(msg.sender, currentTokenId);
     }
 
     /**
